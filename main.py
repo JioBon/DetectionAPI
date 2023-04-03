@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Form, File, UploadFile
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -6,9 +7,13 @@ app = FastAPI()
 class Msg(BaseModel):
     msg: str
 
-@app.post("/baseimg/")
+@app.post("/baseimg/{file.filename}")
 async def create_upload_file(file: UploadFile = File(...), crop: str = Form(...)):
     return {"filename": file.filename, "crop": crop}
+
+@app.route("/baseimg/{filename}", methods=["GET"])
+async def check_upload_file(filename: str):
+    return FileResponse(filename)
 
 
 
