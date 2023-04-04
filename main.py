@@ -6,6 +6,7 @@ from PIL import Image
 import torch
 import numpy as np
 import cv2
+from prediction import read_imagefile, predict, preprocess_img
 
 
 # DICTS
@@ -48,9 +49,20 @@ async def create_upload_file(file: UploadFile = File(...), crop: str = Form(...)
 async def check_upload_file(filename: str):
     return FileResponse(filename)
 
-@app.post("/predicted/")
+@app.post("/predict")
+async def predict_api(file: UploadFile = File(...), crop: str = Form(...)):
+    extension = file.filename.split(".")[-1] in ("jpg", "jpeg", "png")
+    if not extension:
+        return "Image must be jpg or png format!"
+    image = read_imagefile(await file.read())
+    # image = preprocess_img(image)
+    prediction = predict(image, crop)
+
+    return prediction
+
+@app.post("/predicted")
 async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
-    img = Image.open(io.BytesIO(await file))
+    img = Image.open(io.BytesIO(await file.read()))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # IF STATEMENT FOR MODEL CHOOSING
@@ -81,13 +93,13 @@ async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
         cv2.putText(img, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
     
-    with open(img.filename, 'wb') as buffer:
-        buffer.write(await img)
+    # with open(img.filename, 'wb') as buffer:
+    #     buffer.write(await img.write)
 
-    uploaded_files.append(file.filename)
+    # uploaded_files.append(file.filename)
     return {"filename": file.filename, "crop": crop, 'stress': label}
 
-@app.post("/predicted/{filename}")
+@app.get("/predicted/{filename}")
 async def check_predicted_file(filename: str):
     return FileResponse(filename)
 
