@@ -1,7 +1,6 @@
 from io import BytesIO
 
 import numpy as np
-import tensorflow as tf
 from PIL import Image
 import torch
 import cv2
