@@ -34,8 +34,6 @@ onion_label_dict = {
 # MODELS
 onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
 
-from utils.general import non_max_suppression, xywh2xyxy
-
 app = FastAPI()
 
 class Msg(BaseModel):
