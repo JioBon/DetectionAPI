@@ -25,3 +25,7 @@ spicy
 thop
 tqdm
 seaborn
+psutil
+matplotlib
+gitpython
+setuptools
