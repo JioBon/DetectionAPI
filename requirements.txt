@@ -20,3 +20,8 @@ numpy
 opencv-python-headless
 Pillow
 pandas
+requests
+spicy
+thop
+tqdm
+seaborn
