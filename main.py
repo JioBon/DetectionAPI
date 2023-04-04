@@ -50,7 +50,7 @@ async def check_upload_file(filename: str):
 
 @app.post("/predicted/")
 async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
-    img = Image.open(io.BytesIO(await file.read()))
+    img = Image.open(io.BytesIO(file))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # IF STATEMENT FOR MODEL CHOOSING
@@ -82,7 +82,7 @@ async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
 
     
     with open(img.filename, 'wb') as buffer:
-        buffer.write(await img.read())
+        buffer.write(img)
 
     uploaded_files.append(file.filename)
     return {"filename": file.filename, "crop": crop, 'stress': label}
