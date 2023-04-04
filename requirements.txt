@@ -16,6 +16,8 @@ watchfiles==0.18.1
 websockets==10.4
 python-multipart
 torch
+torchvision
+torchaudio
 numpy
 opencv-python-headless
 Pillow
