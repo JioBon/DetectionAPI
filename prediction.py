@@ -44,7 +44,7 @@ def predict(image: np.array, crop: str):
     global onion_model
     global onion_label_dict
     global label
-    conf = None
+    score = 0.00
 
     if onion_model is None:
         print("loading")
