@@ -30,4 +30,4 @@ seaborn
 psutil
 matplotlib
 gitpython
-setuptools
+setuptools>=65.5.1
