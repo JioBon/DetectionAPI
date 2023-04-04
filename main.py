@@ -35,6 +35,7 @@ onion_label_dict = {
 onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
 
 app = FastAPI()
+uploaded_files = []
 
 class Msg(BaseModel):
     msg: str
@@ -47,7 +48,7 @@ async def create_upload_file(file: UploadFile = File(...), crop: str = Form(...)
 async def check_upload_file(filename: str):
     return FileResponse(filename)
 
-@app.post("/predicted/{file.filename}")
+@app.post("/predicted/")
 async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
     img = Image.open(io.BytesIO(await file.read()))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -83,6 +84,7 @@ async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
     with open(img.filename, 'wb') as buffer:
         buffer.write(await img.read())
 
+    uploaded_files.append(file.filename)
     return {"filename": file.filename, "crop": crop, 'stress': label}
 
 @app.post("/predicted/{filename}")
