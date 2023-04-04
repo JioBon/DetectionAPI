@@ -45,6 +45,7 @@ def predict(image: np.array, crop: str):
     global onion_model
     global onion_label_dict
     global label
+    conf = None
 
     if onion_model is None:
         print("loading")
@@ -60,11 +61,12 @@ def predict(image: np.array, crop: str):
         label = detection[-1]
         label = onion_label_dict[int(label)]
         conf = detection[-2]
+        score = float(conf)
         x1, y1, x2, y2 = map(int, detection[:4])
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cv2.putText(image, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     
-    return {"crop": crop, 'stress': label}
+    return {"crop": crop, 'stress': label, 'score': f'{score:.2f}'}
 
 def read_imagefile(file) -> Image.Image:
     nparr = np.frombuffer(file, np.uint8)
