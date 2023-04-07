@@ -67,7 +67,7 @@ def predict(image: np.array, crop: str):
         cv2.putText(image, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
         to_return.append({"crop": crop, 'stress': label, 'score': f'{score:.2f}'})
     if not to_return:
-        return {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00'}
+        return [{"crop": crop, 'stress': 'HEALTHY', 'score': '1.00'}]
     else:
         return to_return
 
