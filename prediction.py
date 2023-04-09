@@ -32,13 +32,30 @@ onion_label_dict = {
     18: 'armyworm'
 }
 
+def load_corn_model():
+    corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
+    print("Model loaded")
+    return corn_model
+
+def load_eggplant_model():
+    eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
+    print("Model loaded")
+    return eggplant_model
 
 def load_onion_model():
     onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
     print("Model loaded")
     return onion_model
 
+def load_tomato_model():
+    tomato_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Tomato.pt')
+    print("Model loaded")
+    return tomato_model
+
+corn_model = load_corn_model()
+eggplant_model = load_eggplant_model()
 onion_model = load_onion_model()
+tomato_model = load_tomato_model()
 
 def predict(image: np.array, crop: str):
     global onion_model
@@ -47,12 +64,32 @@ def predict(image: np.array, crop: str):
     score = 0.00
     to_return = []
 
+    if corn_model is None:
+        print("loading")
+        corn_model = load_corn_model()
+
+    if eggplant_model is None:
+        print("loading")
+        eggplant_model = load_eggplant_model()
+
     if onion_model is None:
         print("loading")
         onion_model = load_onion_model()
 
+    if tomato_model is None:
+        print("loading")
+        tomato_model = load_tomato_model()
+
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    results = onion_model(image)
+    if crop.lower() == "corn":
+        results = corn_model(image)
+    elif crop.lower() == "eggplant":
+        results = eggplant_model(image)
+    elif crop.lower() == "onion":
+        results = onion_model(image)
+    elif crop.lower() == "tomato":
+        results = tomato_model(image)
+    
     print(results)
 
     detections = results.xyxy[0]
@@ -65,7 +102,8 @@ def predict(image: np.array, crop: str):
         x1, y1, x2, y2 = map(int, detection[:4])
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cv2.putText(image, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        to_return.append({"crop": crop, 'stress': label, 'score': f'{score:.2f}'})
+        if score >= 0.4:
+            to_return.append({"crop": crop, 'stress': label, 'score': f'{score:.2f}'})
     if not to_return:
         return [{"crop": crop, 'stress': 'HEALTHY', 'score': '1.00'}]
     else:
