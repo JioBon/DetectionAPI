@@ -59,6 +59,9 @@ tomato_model = load_tomato_model()
 
 def predict(image: np.array, crop: str):
     global onion_model
+    global corn_model
+    global eggplant_model
+    global tomato_model
     global onion_label_dict
     global label
     score = 0.00
