@@ -67,21 +67,21 @@ def predict(image: np.array, crop: str):
     score = 0.00
     to_return = []
 
-    if corn_model is None:
-        print("loading")
-        corn_model = load_corn_model()
+    # if corn_model is None:
+    #     print("loading")
+    #     corn_model = load_corn_model()
 
-    if eggplant_model is None:
-        print("loading")
-        eggplant_model = load_eggplant_model()
+    # if eggplant_model is None:
+    #     print("loading")
+    #     eggplant_model = load_eggplant_model()
 
-    if onion_model is None:
-        print("loading")
-        onion_model = load_onion_model()
+    # if onion_model is None:
+    #     print("loading")
+    #     onion_model = load_onion_model()
 
-    if tomato_model is None:
-        print("loading")
-        tomato_model = load_tomato_model()
+    # if tomato_model is None:
+    #     print("loading")
+    #     tomato_model = load_tomato_model()
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     if crop.lower() == "corn":
@@ -90,7 +90,8 @@ def predict(image: np.array, crop: str):
         results = eggplant_model(image)
     elif crop.lower() == "onion":
         results = onion_model(image)
-    elif crop.lower() == "tomato":
+    # elif crop.lower() == "tomato":
+    else:
         results = tomato_model(image)
     
     print(results)
