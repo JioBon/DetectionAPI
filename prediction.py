@@ -34,26 +34,27 @@ onion_label_dict = {
 
 def load_corn_model():
     corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
-    print("Model loaded")
+    print("Corn Model loaded")
     return corn_model
 
 def load_eggplant_model():
     eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
-    print("Model loaded")
+    print("Eggplant Model loaded")
     return eggplant_model
 
 def load_onion_model():
     onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
-    print("Model loaded")
+    print("Onion Model loaded")
     return onion_model
 
 def load_tomato_model():
     tomato_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Tomato.pt')
-    print("Model loaded")
+    print("Tomato Model loaded")
     return tomato_model
 
 def load_image_detect():
     ImageDetect_model = tf.keras.models.load_model("custom_model/saganaImageDetection.h5")
+    print("Image Detection Model loaded")
     return ImageDetect_model
 
 corn_model = load_corn_model()
