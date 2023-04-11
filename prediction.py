@@ -32,6 +32,55 @@ onion_label_dict = {
     18: 'armyworm'
 }
 
+corn_label_dict = {
+    0: "dog",
+    1: "person",
+    2: "cat",
+    3: "tv",
+    4: "car",
+    5: "meatballs",
+    6: "marinara sauce",
+    7: "tomato soup",
+    8: "chicken noodle soup",
+    9: "french onion soup",
+    10: "chicken breast",
+    11: "ribs",
+    12: "pulled pork",
+    13: "hamburger",
+    14: "cavity",
+    15: "leaf spot",
+    16: "corn borer",
+    17: "eyes spot",
+    18: "goss's wilt",
+    19: "powdery mildew",
+    20: "armyworm",
+    21: "corn plant hopper",
+    22: "Corn borer midrib feeding",
+    23: "adult armyworm",
+    24: "fall armyworm eggs"
+}
+
+tomato_label_dict = {
+    0: "Leafminer",
+    1: "Fusarium Wilt",
+    2: "Black Mold",
+    3: "Powdery Mildew"
+}
+
+eggplant_label_dict = {
+    0: "Leaf Miners",
+    1: "White Flies",
+    2: "Powdery Mildew",
+    3: "Flea Beetles",
+    4: "Holes caused by Aphids",
+    5: "Flea Beetle's damage",
+    6: "Leaf Spot",
+    7: "Potato Beetle",
+    8: "Aphids",
+    9: "Armyworm",
+    10: "Leaf roller moth",
+}
+
 def load_corn_model():
     corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
     print("Corn Model loaded")
@@ -106,7 +155,16 @@ def predict(image: np.array, crop: str):
     print(detections)
     for detection in detections:
         label = detection[-1]
-        label = onion_label_dict[int(label)]
+        if crop.lower() == "corn":
+            label = corn_label_dict[int(label)]
+        elif crop.lower() == "eggplant":
+            label = eggplant_label_dict[int(label)]
+        elif crop.lower() == "onion":
+            label = onion_label_dict[int(label)]
+        # elif crop.lower() == "tomato":
+        else:
+           label = tomato_label_dict[int(label)]
+        
         conf = detection[-2]
         score = float(conf)
         x1, y1, x2, y2 = map(int, detection[:4])
