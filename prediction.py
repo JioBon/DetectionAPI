@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 import torch
 import cv2
-
+import tensorflow as tf
 
 input_shape = (640, 640)
 label = None
@@ -52,10 +52,15 @@ def load_tomato_model():
     print("Model loaded")
     return tomato_model
 
+def load_image_detect():
+    ImageDetect_model = tf.keras.models.load_model("custom_model/saganaImageDetection.h5")
+    return ImageDetect_model
+
 corn_model = load_corn_model()
 eggplant_model = load_eggplant_model()
 onion_model = load_onion_model()
 tomato_model = load_tomato_model()
+ImageDetect_model = load_image_detect()
 
 def predict(image: np.array, crop: str):
     global onion_model
@@ -126,3 +131,17 @@ def preprocess_img(image: Image.Image):
     # image = np.expand_dims(image, 0)
 
     return image
+
+def check_image(image: np.array):
+    global ImageDetect_model
+    class_names = ['crop', 'noncrop']
+
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    resized_image = tf.image.resize(image, (224, 224))
+    input_tensor = tf.expand_dims(resized_image, 0)
+
+    prediction = ImageDetect_model.predict(input_tensor)
+    prediction = tf.nn.sigmoid(prediction)
+    prediction = tf.where(prediction < 0.5, 0, 1)
+
+    return prediction.numpy()[0][0]

@@ -6,7 +6,7 @@ from PIL import Image
 import torch
 import numpy as np
 import cv2
-from prediction import read_imagefile, predict, preprocess_img
+from prediction import read_imagefile, predict, check_image
 
 
 # DICTS
@@ -56,9 +56,12 @@ async def predict_api(file: UploadFile = File(...), crop: str = Form(...)):
         return "Image must be jpg or png format!"
     image = read_imagefile(await file.read())
     # image = preprocess_img(image)
-    prediction = predict(image, crop)
+    if check_image(image):
+        return [{"crop": 'Not Crop', 'stress': 'Not a Crop', 'score': '1.00'}]
+    else:
+        prediction = predict(image, crop)
 
-    return prediction
+        return prediction
 
 # @app.post("/predicted")
 # async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
