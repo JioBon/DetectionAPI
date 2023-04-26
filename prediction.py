@@ -26,10 +26,10 @@ onion_label_dict = {
     12: 'pulled pork',
     13: 'hamburger',
     14: 'cavity',
-    15: 'leaf miners',
-    16: 'downy mildew',
-    17: 'botrytis leaf blight',
-    18: 'armyworm'
+    15: 'Leaf Miners',
+    16: 'Downy Mildew',
+    17: 'Botrytis Leaf Blight',
+    18: 'Armyworm'
 }
 
 corn_label_dict = {
@@ -48,30 +48,30 @@ corn_label_dict = {
     12: "pulled pork",
     13: "hamburger",
     14: "cavity",
-    15: "leaf spot",
-    16: "corn borer",
-    17: "eyes spot",
+    15: "Leaf Spot",
+    16: "Corn Borer",
+    17: "Eye Spot",
     18: "goss's wilt",
-    19: "powdery mildew",
-    20: "armyworm",
-    21: "corn plant hopper",
-    22: "Corn borer midrib feeding",
-    23: "adult armyworm",
-    24: "fall armyworm eggs"
+    19: "Powdery Mildew",
+    20: "Armyworm",
+    21: "Corn Plant Hopper",
+    22: "Corn Borer Midrib Feeding",
+    23: "Adult Armyworm",
+    24: "Fall Armyworm Eggs"
 }
 
 tomato_label_dict = {
-    0: "Leafminer",
+    0: "Leaf Miner",
     1: "Fusarium Wilt",
     2: "Black Mold",
     3: "Powdery Mildew"
 }
 
 eggplant_label_dict = {
-    0: "Leaf Miners",
+    0: "Leaf Miner",
     1: "White Flies",
     2: "Powdery Mildew",
-    3: "Flea Beetles",
+    3: "Flea Beetle",
     4: "Holes caused by Aphids",
     5: "Flea Beetle's damage",
     6: "Leaf Spot",
