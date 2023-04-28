@@ -171,9 +171,15 @@ def predict(image: np.array, crop: str):
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cv2.putText(image, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
         if score >= 0.4:
-            to_return.append({"crop": crop, 'stress': label, 'score': f'{score:.2f}'})
+            to_return.append(
+                {"crop": crop, 'stress': label, 'score': f'{score:.2f}', 
+                 'x1': f'{x1}', 'y1': f'{y1}', 'x2': f'{x2}', 'y2': f'{y2}'}
+                )
     if not to_return:
-        return [{"crop": crop, 'stress': 'HEALTHY', 'score': '1.00'}]
+        return [
+            {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00', 
+            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}
+            ]
     else:
         return to_return
 

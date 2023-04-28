@@ -57,55 +57,12 @@ async def predict_api(file: UploadFile = File(...), crop: str = Form(...)):
     image = read_imagefile(await file.read())
     # image = preprocess_img(image)
     if check_image(image):
-        return [{"crop": 'Not Crop', 'stress': 'Not a Crop', 'score': '1.00'}]
+        return [{"crop": 'Not Crop', 'stress': 'Not a Crop', 'score': '1.00', 
+            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
     else:
         prediction = predict(image, crop)
 
         return prediction
-
-# @app.post("/predicted")
-# async def predict_file(file: UploadFile = File(...), crop: str = Form(...)):
-#     img = Image.open(io.BytesIO(await file.read()))
-#     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-#     # IF STATEMENT FOR MODEL CHOOSING
-#     if crop.lower() == 'onion':
-#         results = onion_model(img)
-        
-
-#     else:
-#         results = onion_model(img)
-
-#     detections = results.xyxy[0]
-
-
-#     for detection in detections:
-#         label = detection[-1]
-
-#         # IF STATEMENT FOR LABEL CHOOSING
-#         if crop.lower() == 'onion':
-#             label = onion_label_dict[int(label)]
-
-#         else:
-#             label = onion_label_dict[int(label)]
-
-
-#         conf = detection[-2]
-#         x1, y1, x2, y2 = map(int, detection[:4])
-#         cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-#         cv2.putText(img, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-    
-#     # with open(img.filename, 'wb') as buffer:
-#     #     buffer.write(await img.write)
-
-#     # uploaded_files.append(file.filename)
-#     return {"filename": file.filename, "crop": crop, 'stress': label}
-
-# @app.get("/predicted/{filename}")
-# async def check_predicted_file(filename: str):
-#     return FileResponse(filename)
-
 
 
 # ==============================================================================================================
