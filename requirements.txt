@@ -32,3 +32,4 @@ matplotlib
 gitpython
 setuptools>=65.5.1
 tensorflow
+git+https://github.com/ultralytics/yolov5.git
