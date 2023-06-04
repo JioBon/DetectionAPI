@@ -3,7 +3,7 @@
   "build": {
     "builder": "NIXPACKS",
     "scripts": {
-      "install": "sudo apt-get update && sudo apt-get install -y libgl1-mesa-glx"
+      "install": "pip install opencv-python-headless"
     }
   },
   "deploy": {
