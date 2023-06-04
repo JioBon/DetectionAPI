@@ -26,10 +26,10 @@ onion_label_dict = {
     12: 'pulled pork',
     13: 'hamburger',
     14: 'cavity',
-    15: 'Leaf Miners',
-    16: 'Downy Mildew',
+    15: 'Leaf Miners Damage',
+    16: 'Armyworm Damage',
     17: 'Botrytis Leaf Blight',
-    18: 'Armyworm'
+    18: 'Beet Armyworm'
 }
 
 corn_label_dict = {
@@ -48,16 +48,16 @@ corn_label_dict = {
     12: "pulled pork",
     13: "hamburger",
     14: "cavity",
-    15: "Leaf Spot",
-    16: "Corn Borer",
+    15: "Scraping Damage of Armyworm",
+    16: "Corn Borer Damage",
     17: "Eye Spot",
-    18: "goss's wilt",
-    19: "Powdery Mildew",
-    20: "Armyworm",
+    18: "Goss's Wilt",
+    19: "Corn Plant Hopper Egg Mass",
+    20: "Fall Armyworm Larve",
     21: "Corn Plant Hopper",
-    22: "Corn Borer Midrib Feeding",
-    23: "Adult Armyworm",
-    24: "Fall Armyworm Eggs"
+    22: "Frass of Armyworm",
+    23: "Fall armyworm Female Moth",
+    24: "Fall Armyworm Egg Mass"
 }
 
 tomato_label_dict = {
@@ -69,16 +69,16 @@ tomato_label_dict = {
 
 eggplant_label_dict = {
     0: "Leaf Miner",
-    1: "White Flies",
+    1: "Leaf Hopper",
     2: "Powdery Mildew",
-    3: "Flea Beetle",
+    3: "Flea Beetles",
     4: "Holes caused by Aphids",
-    5: "Flea Beetle's damage",
+    5: "Flea Beetle's Damage",
     6: "Leaf Spot",
     7: "Potato Beetle",
     8: "Aphids",
-    9: "Armyworm",
-    10: "Leaf roller moth",
+    9: "Earworm",
+    10: "Leaf Roller Moth",
 }
 
 def load_corn_model():
