@@ -9,8 +9,12 @@ license = "MIT"
 python = "^3.10"
 fastapi = "^0.80.0"
 uvicorn = "^0.18.3"
+ultralytics = ">=8.0.111"
 
 [tool.poetry.dev-dependencies]
+
+[tool.poetry.dependencies.extras]
+exclude = ["opencv-python"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
