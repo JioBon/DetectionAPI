@@ -19,10 +19,15 @@ torch
 torchvision
 torchaudio
 numpy
-opencv-python-headless==4.7.0.72
+# opencv-python-headless==4.7.0.72
 Pillow
 pandas
 requests
+spicy
+thop
+tqdm
+seaborn
+psutil
 matplotlib
 gitpython
 setuptools>=65.5.1
