@@ -32,4 +32,4 @@ matplotlib
 gitpython
 setuptools>=65.5.1
 tensorflow==2.12.0
-ultralytics
+ultralytics @ https://github.com/ultralytics/yolov5/archive/master.zip#egg=ultralytics
