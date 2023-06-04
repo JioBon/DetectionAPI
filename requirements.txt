@@ -19,7 +19,8 @@ torch
 torchvision
 torchaudio
 numpy
-opencv-python-headless
+opencv-python-headless==4.5.3.56
+libgl1-mesa-glx
 Pillow
 pandas
 requests
