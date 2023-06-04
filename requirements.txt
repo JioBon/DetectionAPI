@@ -11,15 +11,15 @@ sniffio==1.3.0
 starlette==0.22.0
 typing_extensions==4.4.0
 uvicorn==0.22.0
-# uvloop==0.17.0
+uvloop==0.17.0
 watchfiles==0.18.1
 websockets==10.4
 python-multipart
-torch
-torchvision
-torchaudio
+torch==2.0.0
+torchvision==0.15.1
+torchaudio==2.0.1
 numpy
-opencv-python-headless==4.7.0.72
+opencv-python-headless
 Pillow
 pandas
 requests
@@ -31,5 +31,5 @@ psutil
 matplotlib
 gitpython
 setuptools>=65.5.1
-tensorflow
-ultralytics==0.0.6
+tensorflow==2.12.0
+# ultralytics
