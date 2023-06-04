@@ -32,9 +32,6 @@ onion_label_dict = {
     18: 'armyworm'
 }
 
-# MODELS
-onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
-
 app = FastAPI()
 uploaded_files = []
 

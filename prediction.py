@@ -5,6 +5,7 @@ from PIL import Image
 import torch
 import cv2
 import tensorflow as tf
+import sys
 
 input_shape = (640, 640)
 label = None
@@ -83,21 +84,25 @@ eggplant_label_dict = {
 
 def load_corn_model():
     corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
+    # corn_model = torch.load(sys.path.append('/custom_model/Corn.pt'))
     print("Corn Model loaded")
     return corn_model
 
 def load_eggplant_model():
     eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
+    # eggplant_model = torch.load(sys.path.append('/custom_model/Eggplant.pt'))
     print("Eggplant Model loaded")
     return eggplant_model
 
 def load_onion_model():
     onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
+    # onion_model = torch.load(sys.path.append('/custom_model/Onion.pt'))
     print("Onion Model loaded")
     return onion_model
 
 def load_tomato_model():
     tomato_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Tomato.pt')
+    # tomato_model = torch.load(sys.path.append('/custom_model/Tomato.pt'))
     print("Tomato Model loaded")
     return tomato_model
 
