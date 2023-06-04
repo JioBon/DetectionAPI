@@ -19,7 +19,7 @@ torch
 torchvision
 torchaudio
 numpy
-# opencv-python-headless==4.7.0.72
+opencv-python-headless==4.7.0.72
 Pillow
 pandas
 requests
