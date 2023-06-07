@@ -53,13 +53,19 @@ async def predict_api(file: UploadFile = File(...), crop: str = Form(...)):
         return "Image must be jpg or png format!"
     image = read_imagefile(await file.read())
     # image = preprocess_img(image)
-    if check_image(image):
-        return [{"crop": 'Not Crop', 'stress': 'Not a Crop', 'score': '1.00', 
+    crop_type = check_image(image)
+    print(crop_type)
+    if crop_type == crop:
+        prediction = predict(image, crop)
+        return prediction
+    elif crop_type == 'noncrop':
+        return [{"crop": f'Not a Crop', 'stress': 'Invalid', 'score': '1.00', 
             'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
     else:
-        prediction = predict(image, crop)
+        return [{"crop": f'Not {crop}', 'stress': 'Invalid', 'score': '1.00', 
+            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
 
-        return prediction
+        
 
 
 # ==============================================================================================================

@@ -117,6 +117,8 @@ onion_model = load_onion_model()
 tomato_model = load_tomato_model()
 ImageDetect_model = load_image_detect()
 
+crop_classes = ['corn', 'eggplant', 'noncrop', 'onion', 'tomato']
+
 def predict(image: np.array, crop: str):
     global onion_model
     global corn_model
@@ -157,7 +159,6 @@ def predict(image: np.array, crop: str):
     print(results)
 
     detections = results.xyxy[0]
-    print(detections)
     for detection in detections:
         label = detection[-1]
         if crop.lower() == "corn":
@@ -170,8 +171,11 @@ def predict(image: np.array, crop: str):
         else:
            label = tomato_label_dict[int(label)]
         
+        
         conf = detection[-2]
         score = float(conf)
+
+        # print(label, score)
         x1, y1, x2, y2 = map(int, detection[:4])
         cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
         cv2.putText(image, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
@@ -180,6 +184,7 @@ def predict(image: np.array, crop: str):
                 {"crop": crop, 'stress': label, 'score': f'{score:.2f}', 
                  'x1': f'{x1}', 'y1': f'{y1}', 'x2': f'{x2}', 'y2': f'{y2}'}
                 )
+    print(to_return)        
     if not to_return:
         return [
             {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00', 
@@ -204,14 +209,13 @@ def preprocess_img(image: Image.Image):
 
 def check_image(image: np.array):
     global ImageDetect_model
-    class_names = ['crop', 'noncrop']
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     resized_image = tf.image.resize(image, (224, 224))
     input_tensor = tf.expand_dims(resized_image, 0)
 
     prediction = ImageDetect_model.predict(input_tensor)
-    prediction = tf.nn.sigmoid(prediction)
-    prediction = tf.where(prediction < 0.5, 0, 1)
+    prediction = tf.nn.softmax(prediction)
+    predicted_label = np.argmax(prediction[0])
 
-    return prediction.numpy()[0][0]
+    return crop_classes[predicted_label]
