@@ -106,6 +106,12 @@ def load_tomato_model():
     print("Tomato Model loaded")
     return tomato_model
 
+def load_tomato_model2():
+    tomato_model2 = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/version2/Tomato.pt')
+    # tomato_model = torch.load(sys.path.append('/custom_model/Tomato.pt'))
+    print("Tomato Model loaded")
+    return tomato_model
+
 def load_image_detect():
     ImageDetect_model = tf.keras.models.load_model("custom_model/saganaImageDetection.h5")
     print("Image Detection Model loaded")
@@ -115,6 +121,7 @@ corn_model = load_corn_model()
 eggplant_model = load_eggplant_model()
 onion_model = load_onion_model()
 tomato_model = load_tomato_model()
+tomato_model2 = load_tomato_model2()
 ImageDetect_model = load_image_detect()
 
 crop_classes = ['corn', 'eggplant', 'noncrop', 'onion', 'tomato']
@@ -155,6 +162,9 @@ def predict(image: np.array, crop: str):
     # elif crop.lower() == "tomato":
     else:
         results = tomato_model(image)
+        if results:
+            results = tomato_model2(image)
+            print("hello")
     
     print(results)
 
