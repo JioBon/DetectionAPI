@@ -47,23 +47,27 @@ async def check_upload_file(filename: str):
     return FileResponse(filename)
 
 @app.post("/predict")
-async def predict_api(file: UploadFile = File(...), crop: str = Form(...)):
+async def predict_api(file: UploadFile = File(...), crop: str = Form(...), bypass: bool = Form(...)):
     extension = file.filename.split(".")[-1] in ("jpg", "jpeg", "png")
     if not extension:
         return "Image must be jpg or png format!"
     image = read_imagefile(await file.read())
     # image = preprocess_img(image)
     crop_type = check_image(image)
-    print(crop_type)
-    if crop_type == crop:
-        prediction = predict(image, crop)
-        return prediction
+    print(crop_type, crop)
+    if bypass:
+        crop_type = check_image(image)
     elif crop_type == 'noncrop':
         return [{"crop": f'Not a Crop', 'stress': 'Invalid', 'score': '1.00', 
             'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
     else:
-        return [{"crop": f'Not {crop}', 'stress': 'Invalid', 'score': '1.00', 
-            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
+        crop_type = crop
+        if crop_type == crop:
+            prediction = predict(image, crop)
+            return prediction
+        else:
+            return [{"crop": f'Not {crop}', 'stress': 'Invalid', 'score': '1.00', 
+                'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
 
         
 
