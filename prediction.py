@@ -94,8 +94,20 @@ def load_eggplant_model():
     print("Eggplant Model loaded")
     return eggplant_model
 
+def load_eggplant_model2():
+    eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/version2/Eggplant.pt')
+    # eggplant_model = torch.load(sys.path.append('/custom_model/Eggplant.pt'))
+    print("Eggplant Model loaded")
+    return eggplant_model
+
 def load_onion_model():
     onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
+    # onion_model = torch.load(sys.path.append('/custom_model/Onion.pt'))
+    print("Onion Model loaded")
+    return onion_model
+
+def load_onion_model2():
+    onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/versiom2/Onion.pt')
     # onion_model = torch.load(sys.path.append('/custom_model/Onion.pt'))
     print("Onion Model loaded")
     return onion_model
@@ -118,8 +130,14 @@ def load_image_detect():
     return ImageDetect_model
 
 corn_model = load_corn_model()
+# corn_model = load_corn_model2()
+
 eggplant_model = load_eggplant_model()
+eggplant_model = load_eggplant_mode2()
+
 onion_model = load_onion_model()
+onion_model = load_onion_model2()
+
 tomato_model = load_tomato_model()
 tomato_model2 = load_tomato_model2()
 ImageDetect_model = load_image_detect()
@@ -157,14 +175,17 @@ def predict(image: np.array, crop: str):
         results = corn_model(image)
     elif crop.lower() == "eggplant":
         results = eggplant_model(image)
+        if results:
+            results = eggplant_model2(image)
     elif crop.lower() == "onion":
         results = onion_model(image)
+        if results:
+            results = onion_model2(image)
     # elif crop.lower() == "tomato":
     else:
         results = tomato_model(image)
         if results:
             results = tomato_model2(image)
-            print("hello")
     
     print(results)
 
