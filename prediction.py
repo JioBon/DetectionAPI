@@ -133,10 +133,10 @@ corn_model = load_corn_model()
 # corn_model = load_corn_model2()
 
 eggplant_model = load_eggplant_model()
-eggplant_model = load_eggplant_mode2()
+eggplant_model2 = load_eggplant_model2()
 
 onion_model = load_onion_model()
-onion_model = load_onion_model2()
+onion_model2 = load_onion_model2()
 
 tomato_model = load_tomato_model()
 tomato_model2 = load_tomato_model2()
