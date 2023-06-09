@@ -88,6 +88,12 @@ def load_corn_model():
     print("Corn Model loaded")
     return corn_model
 
+def load_corn_model2():
+    corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/backupv2/Corn.pt')
+    # corn_model = torch.load(sys.path.append('/custom_model/Corn.pt'))
+    print("Corn Model loaded")
+    return corn_model
+
 def load_eggplant_model():
     eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
     # eggplant_model = torch.load(sys.path.append('/custom_model/Eggplant.pt'))
@@ -130,7 +136,7 @@ def load_image_detect():
     return ImageDetect_model
 
 corn_model = load_corn_model()
-# corn_model = load_corn_model2()
+corn_model2 = load_corn_model2()
 
 eggplant_model = load_eggplant_model()
 eggplant_model2 = load_eggplant_model2()
@@ -173,23 +179,38 @@ def predict(image: np.array, crop: str):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     if crop.lower() == "corn":
         results = corn_model(image)
+        results2 = corn_model2(image)
     elif crop.lower() == "eggplant":
         results = eggplant_model(image)
-        if results:
-            results = eggplant_model2(image)
+        results2 = eggplant_model2(image)
     elif crop.lower() == "onion":
         results = onion_model(image)
-        if results:
-            results = onion_model2(image)
+        # if results:
+        results2 = onion_model2(image)
     # elif crop.lower() == "tomato":
     else:
         results = tomato_model(image)
-        if results:
-            results = tomato_model2(image)
+        results2 = tomato_model2(image)
     
-    print(results)
+    print("hello", type(results))
 
     detections = results.xyxy[0]
+    detections2 = results2.xyxy[0]
+    print("testing", type(detections))
+    to_return = filterDetection(detections, crop, image)
+    check = filterDetection(detections2, crop, image)
+    if check:
+        to_return.extend(check)  
+    if not to_return:
+        return [
+            {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00', 
+            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}
+            ]
+    else:
+        return to_return
+
+def filterDetection(detections, crop, image):
+    to_return = []
     for detection in detections:
         label = detection[-1]
         if crop.lower() == "corn":
@@ -216,14 +237,8 @@ def predict(image: np.array, crop: str):
                 {"crop": crop, 'stress': label, 'score': f'{score:.2f}', 
                  'x1': f'{x1}', 'y1': f'{y1}', 'x2': f'{x2}', 'y2': f'{y2}'}
                 )
-    # print(to_return)        
-    if not to_return:
-        return [
-            {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00', 
-            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}
-            ]
-    else:
-        return to_return
+
+    return to_return
 
 def read_imagefile(file) -> Image.Image:
     nparr = np.frombuffer(file, np.uint8)
