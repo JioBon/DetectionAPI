@@ -107,7 +107,7 @@ def load_onion_model():
     return onion_model
 
 def load_onion_model2():
-    onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/versiom2/Onion.pt')
+    onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/version2/Onion.pt')
     # onion_model = torch.load(sys.path.append('/custom_model/Onion.pt'))
     print("Onion Model loaded")
     return onion_model
