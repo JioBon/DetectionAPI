@@ -198,7 +198,7 @@ def predict(image: np.array, crop: str):
     detections2 = results2.xyxy[0]
     print("testing", type(detections))
     to_return = filterDetection(detections, crop, image)
-    if len(to_return < 3):
+    if len(to_return) < 3:
         check = filterDetection(detections2, crop, image)
         if check:
             to_return.extend(check)  
