@@ -36,13 +36,13 @@ async def predict_api(file: UploadFile = File(...), crop: str = Form(...), bypas
         prediction = predict(image, crop)
         return prediction
     elif crop_type == 'noncrop':
-        return "Not a Crop"
+        return {"stress" : "Not a Crop"}
     else:
         if crop_type.lower() == crop.lower():
             prediction = predict(image, crop)
             return prediction
         else:
-            return f'Not {crop}'
+            return {"stress" : f'Not {crop}'}
 
         
 

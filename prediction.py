@@ -109,9 +109,9 @@ def predict(image: np.array, crop: str):
     print(results)
    
     if not results:
-        return "Healthy"
+        return {"stress" :"Healthy"}
     else:
-        return results
+        return {"stress ": results}
     
 def get_label(prediction, crop):
     prediction = tf.nn.softmax(prediction)
