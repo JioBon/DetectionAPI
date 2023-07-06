@@ -9,30 +9,6 @@ import cv2
 from prediction import read_imagefile, predict, check_image
 from tensorflow import keras
 
-
-# DICTS
-onion_label_dict = {
-    0: 'dog',
-    1: 'person',
-    2: 'cat',
-    3: 'tv',
-    4: 'car',
-    5: 'meatballs',
-    6: 'marinara sauce',
-    7: 'tomato soup',
-    8: 'chicken noodle soup',
-    9: 'french onion soup',
-    10: 'chicken breast',
-    11: 'ribs',
-    12: 'pulled pork',
-    13: 'hamburger',
-    14: 'cavity',
-    15: 'leaf miners',
-    16: 'downy mildew',
-    17: 'botrytis leaf blight',
-    18: 'armyworm'
-}
-
 app = FastAPI()
 uploaded_files = []
 
@@ -48,23 +24,25 @@ async def check_upload_file(filename: str):
     return FileResponse(filename)
 
 @app.post("/predict")
-async def predict_api(file: UploadFile = File(...), crop: str = Form(...)):
+async def predict_api(file: UploadFile = File(...), crop: str = Form(...), bypass: bool = Form(...)):
     extension = file.filename.split(".")[-1] in ("jpg", "jpeg", "png")
     if not extension:
         return "Image must be jpg or png format!"
     image = read_imagefile(await file.read())
     # image = preprocess_img(image)
     crop_type = check_image(image)
-    print(crop_type)
-    if crop_type == crop:
+    print(crop_type, crop)
+    if bypass:
         prediction = predict(image, crop)
         return prediction
     elif crop_type == 'noncrop':
-        return [{"crop": f'Not a Crop', 'stress': 'Invalid', 'score': '1.00', 
-            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
+        return "Not a Crop"
     else:
-        return [{"crop": f'Not {crop}', 'stress': 'Invalid', 'score': '1.00', 
-            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}]
+        if crop_type.lower() == crop.lower():
+            prediction = predict(image, crop)
+            return prediction
+        else:
+            return f'Not {crop}'
 
         
 

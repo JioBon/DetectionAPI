@@ -31,5 +31,5 @@ psutil
 matplotlib
 gitpython
 setuptools>=65.5.1
-tensorflow==2.9.1
+tensorflow==2.12.0
 # ultralytics

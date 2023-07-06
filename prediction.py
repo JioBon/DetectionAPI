@@ -8,80 +8,8 @@ import tensorflow as tf
 import sys
 from tensorflow import keras
 
-input_shape = (640, 640)
+input_shape = (256, 256)
 label = None
-
-# DICTS
-onion_label_dict = {
-    0: 'dog',
-    1: 'person',
-    2: 'cat',
-    3: 'tv',
-    4: 'car',
-    5: 'meatballs',
-    6: 'marinara sauce',
-    7: 'tomato soup',
-    8: 'chicken noodle soup',
-    9: 'french onion soup',
-    10: 'chicken breast',
-    11: 'ribs',
-    12: 'pulled pork',
-    13: 'hamburger',
-    14: 'cavity',
-    15: 'Leaf Miners Damage',
-    16: 'Armyworm Damage',
-    17: 'Botrytis Leaf Blight',
-    18: 'Beet Armyworm'
-}
-
-corn_label_dict = {
-    0: "dog",
-    1: "person",
-    2: "cat",
-    3: "tv",
-    4: "car",
-    5: "meatballs",
-    6: "marinara sauce",
-    7: "tomato soup",
-    8: "chicken noodle soup",
-    9: "french onion soup",
-    10: "chicken breast",
-    11: "ribs",
-    12: "pulled pork",
-    13: "hamburger",
-    14: "cavity",
-    15: "Scraping Damage of Armyworm",
-    16: "Corn Borer Damage",
-    17: "Eye Spot",
-    18: "Goss's Wilt",
-    19: "Corn Plant Hopper Egg Mass",
-    20: "Fall Armyworm Larve",
-    21: "Corn Plant Hopper",
-    22: "Frass of Armyworm",
-    23: "Fall armyworm Female Moth",
-    24: "Fall Armyworm Egg Mass"
-}
-
-tomato_label_dict = {
-    0: "Leaf Miner",
-    1: "Fusarium Wilt",
-    2: "Black Mold",
-    3: "Powdery Mildew"
-}
-
-eggplant_label_dict = {
-    0: "Leaf Miner",
-    1: "Leaf Hopper",
-    2: "Powdery Mildew",
-    3: "Flea Beetles",
-    4: "Holes caused by Aphids",
-    5: "Flea Beetle's Damage",
-    6: "Leaf Spot",
-    7: "Potato Beetle",
-    8: "Aphids",
-    9: "Earworm",
-    10: "Leaf Roller Moth",
-}
 
 def load_corn_model():
     # corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
@@ -90,6 +18,7 @@ def load_corn_model():
     corn_model = tf.keras.models.load_model("custom_model/Corn.h5")
     print("Corn Model loaded")
     return corn_model
+
 
 def load_eggplant_model():
     # eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
@@ -150,24 +79,29 @@ def predict(image: np.array, crop: str):
     to_return = []
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    resized_image = tf.image.resize(image, (224, 224))
+    resized_image = tf.image.resize(image, (256, 256))
     input_tensor = tf.expand_dims(resized_image, 0)
 
 
     # prediction = ImageDetect_model.predict(input_tensor)
     if crop.lower() == "corn":
         prediction = corn_model.predict(input_tensor)
-        results = get_label(prediction)
+        results = get_label(prediction, "corn")
     elif crop.lower() == "eggplant":
         prediction = eggplant_model.predict(input_tensor)
-        results = get_label(prediction)
+        results = get_label(prediction, "eggplant")
     elif crop.lower() == "onion":
+        # Temporary
+        resized_image = tf.image.resize(image, (128, 128))
+        input_tensor = tf.expand_dims(resized_image, 0)
+        # End Temporary
+
         prediction = onion_model.predict(input_tensor)
-        results = get_label(prediction)
+        results = get_label(prediction, "onion")
     # elif crop.lower() == "tomato":
     else:
         prediction = tomato_model.predict(input_tensor)
-        results = get_label(prediction)
+        results = get_label(prediction, "tomato")
 
     prediction = tf.nn.softmax(prediction)
     predicted_label = np.argmax(prediction[0])
@@ -175,10 +109,7 @@ def predict(image: np.array, crop: str):
     print(results)
    
     if not results:
-        return [
-            {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00', 
-            'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}
-            ]
+        return "Healthy"
     else:
         return results
     
