@@ -6,6 +6,7 @@ import torch
 import cv2
 import tensorflow as tf
 import sys
+from tensorflow import keras
 
 input_shape = (640, 640)
 label = None
@@ -83,26 +84,34 @@ eggplant_label_dict = {
 }
 
 def load_corn_model():
-    corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
+    # corn_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Corn.pt')
     # corn_model = torch.load(sys.path.append('/custom_model/Corn.pt'))
+
+    corn_model = tf.keras.models.load_model("custom_model/Corn.h5")
     print("Corn Model loaded")
     return corn_model
 
 def load_eggplant_model():
-    eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
+    # eggplant_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Eggplant.pt')
     # eggplant_model = torch.load(sys.path.append('/custom_model/Eggplant.pt'))
+
+    eggplant_model = tf.keras.models.load_model("custom_model/Eggplant.h5")
     print("Eggplant Model loaded")
     return eggplant_model
 
 def load_onion_model():
-    onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
+    # onion_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Onion.pt')
     # onion_model = torch.load(sys.path.append('/custom_model/Onion.pt'))
+
+    onion_model = tf.keras.models.load_model("custom_model/Onion.h5")
     print("Onion Model loaded")
     return onion_model
 
 def load_tomato_model():
-    tomato_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Tomato.pt')
+    # tomato_model = torch.hub.load('ultralytics/yolov5', 'custom', path='custom_model/Tomato.pt')
     # tomato_model = torch.load(sys.path.append('/custom_model/Tomato.pt'))
+
+    tomato_model = tf.keras.models.load_model("custom_model/Tomato.h5")
     print("Tomato Model loaded")
     return tomato_model
 
@@ -111,87 +120,83 @@ def load_image_detect():
     print("Image Detection Model loaded")
     return ImageDetect_model
 
+ImageDetect_model = load_image_detect()
 corn_model = load_corn_model()
 eggplant_model = load_eggplant_model()
 onion_model = load_onion_model()
 tomato_model = load_tomato_model()
-ImageDetect_model = load_image_detect()
+
 
 crop_classes = ['corn', 'eggplant', 'noncrop', 'onion', 'tomato']
+
+corn_classes = ['Corn Borer Damage', 'Corn Plant Hopper', 'Goss_s Wilt', 'Scraping Damage of Armyworms']
+eggplant_classes = ['Earworm', "Flea Beetle's damage", 'Leaf Spot']
+onion_classes = ['armyworm damage', 'beet armyworm', 'botrytis leaf blight', 'leaf miners damage']
+tomato_classes = ['Black Mold', 'Fusarium Wilt', "Leaf Miner's damage"]
 
 def predict(image: np.array, crop: str):
     global onion_model
     global corn_model
     global eggplant_model
     global tomato_model
-    global onion_label_dict
+
+    global corn_classes
+    global eggplant_classes
+    global onion_classes
+    global tomato_classes
+
     global label
     score = 0.00
     to_return = []
 
-    # if corn_model is None:
-    #     print("loading")
-    #     corn_model = load_corn_model()
-
-    # if eggplant_model is None:
-    #     print("loading")
-    #     eggplant_model = load_eggplant_model()
-
-    # if onion_model is None:
-    #     print("loading")
-    #     onion_model = load_onion_model()
-
-    # if tomato_model is None:
-    #     print("loading")
-    #     tomato_model = load_tomato_model()
-
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    resized_image = tf.image.resize(image, (224, 224))
+    input_tensor = tf.expand_dims(resized_image, 0)
+
+
+    # prediction = ImageDetect_model.predict(input_tensor)
     if crop.lower() == "corn":
-        results = corn_model(image)
+        prediction = corn_model.predict(input_tensor)
+        results = get_label(prediction)
     elif crop.lower() == "eggplant":
-        results = eggplant_model(image)
+        prediction = eggplant_model.predict(input_tensor)
+        results = get_label(prediction)
     elif crop.lower() == "onion":
-        results = onion_model(image)
+        prediction = onion_model.predict(input_tensor)
+        results = get_label(prediction)
     # elif crop.lower() == "tomato":
     else:
-        results = tomato_model(image)
+        prediction = tomato_model.predict(input_tensor)
+        results = get_label(prediction)
+
+    prediction = tf.nn.softmax(prediction)
+    predicted_label = np.argmax(prediction[0])
     
     print(results)
-
-    detections = results.xyxy[0]
-    for detection in detections:
-        label = detection[-1]
-        if crop.lower() == "corn":
-            label = corn_label_dict[int(label)]
-        elif crop.lower() == "eggplant":
-            label = eggplant_label_dict[int(label)]
-        elif crop.lower() == "onion":
-            label = onion_label_dict[int(label)]
-        # elif crop.lower() == "tomato":
-        else:
-           label = tomato_label_dict[int(label)]
-        
-        
-        conf = detection[-2]
-        score = float(conf)
-
-        # print(label, score)
-        x1, y1, x2, y2 = map(int, detection[:4])
-        cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        cv2.putText(image, f'{label} {conf:.2f}', (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-        if score >= 0.4:
-            to_return.append(
-                {"crop": crop, 'stress': label, 'score': f'{score:.2f}', 
-                 'x1': f'{x1}', 'y1': f'{y1}', 'x2': f'{x2}', 'y2': f'{y2}'}
-                )
-    print(to_return)        
-    if not to_return:
+   
+    if not results:
         return [
             {"crop": crop, 'stress': 'HEALTHY', 'score': '1.00', 
             'x1': f'0', 'y1': f'0', 'x2': f'0', 'y2': f'0'}
             ]
     else:
-        return to_return
+        return results
+    
+def get_label(prediction, crop):
+    prediction = tf.nn.softmax(prediction)
+    predicted_label = np.argmax(prediction[0])
+
+    if crop.lower() == "corn":
+        return corn_classes[predicted_label]
+    elif crop.lower() == "eggplant":
+        return eggplant_classes[predicted_label]
+    elif crop.lower() == "onion":
+        return onion_classes[predicted_label]
+    # elif crop.lower() == "tomato":
+    else:
+        return tomato_classes[predicted_label]
+
+    
 
 def read_imagefile(file) -> Image.Image:
     nparr = np.frombuffer(file, np.uint8)
