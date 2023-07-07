@@ -58,10 +58,10 @@ tomato_model = load_tomato_model()
 
 crop_classes = ['corn', 'eggplant', 'noncrop', 'onion', 'tomato']
 
-corn_classes = ['Corn Borer Damage', 'Corn Plant Hopper', 'Goss_s Wilt', 'Scraping Damage of Armyworms']
-eggplant_classes = ['Earworm', "Flea Beetle's damage", 'Leaf Spot']
-onion_classes = ['armyworm damage', 'beet armyworm', 'botrytis leaf blight', 'leaf miners damage']
-tomato_classes = ['Black Mold', 'Fusarium Wilt', "Leaf Miner's damage"]
+corn_classes = ['Corn Borer Damage', 'Corn Plant Hopper', "Goss's Wilt", 'Scraping Damage of Armyworms']
+eggplant_classes = ['Earworm', "Flea Beetle's Damage", 'Leaf Spot']
+onion_classes = ['Armyworm Damage', 'Beet Armyworm', 'Botrytis Leaf Blight', 'Leaf Miners Damage']
+tomato_classes = ['Black Mold', 'Fusarium Wilt', "Leaf Miner's Damage"]
 
 def predict(image: np.array, crop: str):
     global onion_model
@@ -91,11 +91,6 @@ def predict(image: np.array, crop: str):
         prediction = eggplant_model.predict(input_tensor)
         results = get_label(prediction, "eggplant")
     elif crop.lower() == "onion":
-        # Temporary
-        resized_image = tf.image.resize(image, (128, 128))
-        input_tensor = tf.expand_dims(resized_image, 0)
-        # End Temporary
-
         prediction = onion_model.predict(input_tensor)
         results = get_label(prediction, "onion")
     # elif crop.lower() == "tomato":
