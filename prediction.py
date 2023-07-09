@@ -142,7 +142,7 @@ def check_image(image: np.array):
     global ImageDetect_model
 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    resized_image = tf.image.resize(image, (224, 224))
+    resized_image = tf.image.resize(image, (256, 256))
     input_tensor = tf.expand_dims(resized_image, 0)
 
     prediction = ImageDetect_model.predict(input_tensor)
