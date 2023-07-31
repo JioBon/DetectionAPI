@@ -58,9 +58,9 @@ tomato_model = load_tomato_model()
 
 crop_classes = ['corn', 'eggplant', 'noncrop', 'onion', 'tomato']
 
-corn_classes = ['Corn Borer Damage', 'Corn Plant Hopper', "Goss's Wilt", 'Scraping Damage of Armyworms']
-eggplant_classes = ['Earworm', "Flea Beetle's Damage", 'Leaf Spot']
-onion_classes = ['Armyworm Damage', 'Beet Armyworm', 'Botrytis Leaf Blight', 'Leaf Miners Damage']
+corn_classes = ['Holes Caused by Lepidopteran Pests', 'Corn Plant Hopper', "Goss's Wilt", 'Scraping Damage Caused by Lepidopteran Pests']
+eggplant_classes = ['Earworm', "Damage Caused by Coleopteran Pests", 'Leaf Spot']
+onion_classes = ['Damage Caused by Lepidopteran Pests', 'Beet Armyworm', 'Botrytis Leaf Blight', 'Leaf Miners Damage']
 tomato_classes = ['Black Mold', 'Fusarium Wilt', "Leaf Miner's Damage"]
 
 def predict(image: np.array, crop: str):
